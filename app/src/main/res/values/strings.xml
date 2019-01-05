@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Popular Movies</string>
+
+    <!-- connection failed -->
+    <string name="fetch_failed">Fetch data failed</string>
+    <string name="no_internet">Please check your internet connection.</string>
+
+    <!-- detail -->
+    <string name="average_rating">Average Rating:</string>
+    <string name="release_date">Release Date:</string>
+    <string name="genre_type">Type:</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <string name="btn_skip_intro">Skip Intro</string>
+
+
+    <string name="error_player">There was an error initializing the YouTubePlayer (%1$s)</string>
+
+
+</resources>

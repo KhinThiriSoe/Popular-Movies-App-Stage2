@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      tools:context=".ui.detail.view.DetailActivity">
+    <item
+            android:id="@+id/action_save"
+            android:orderInCategory="200"
+            android:title="favorite"
+            app:showAsAction="ifRoom"
+            android:icon="@drawable/ic_favorite_border"/>
+</menu>
