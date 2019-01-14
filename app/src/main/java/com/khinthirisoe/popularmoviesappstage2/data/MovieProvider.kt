@@ -1,18 +1,17 @@
 package com.khinthirisoe.popularmoviesappstage2.data
 
 import android.content.ContentProvider
-import android.content.ContentUris
 import android.content.ContentValues
 import android.content.UriMatcher
 import android.database.Cursor
 import android.database.sqlite.SQLiteQueryBuilder
 import android.net.Uri
 import androidx.annotation.NonNull
-import com.khinthirisoe.popularmoviesappstage2.data.MoviesPersistenceContract.CONTENT_AUTHORITY
-import com.khinthirisoe.popularmoviesappstage2.data.MoviesPersistenceContract.Genres
-import com.khinthirisoe.popularmoviesappstage2.data.MoviesPersistenceContract.Movies
-import com.khinthirisoe.popularmoviesappstage2.data.MoviesPersistenceContract.Reviews
-import com.khinthirisoe.popularmoviesappstage2.data.MoviesPersistenceContract.Trailers
+import com.khinthirisoe.popularmoviesappstage2.data.MovieContract.CONTENT_AUTHORITY
+import com.khinthirisoe.popularmoviesappstage2.data.MovieContract.Genres
+import com.khinthirisoe.popularmoviesappstage2.data.MovieContract.Movies
+import com.khinthirisoe.popularmoviesappstage2.data.MovieContract.Reviews
+import com.khinthirisoe.popularmoviesappstage2.data.MovieContract.Trailers
 
 
 class MovieProvider : ContentProvider() {
@@ -39,7 +38,7 @@ class MovieProvider : ContentProvider() {
             )
             URI_MATCHER.addURI(
                 CONTENT_AUTHORITY,
-                Movies.TABLE_NAME, URI_MOVIE_ID
+                Movies.TABLE_NAME + "/#", URI_MOVIE_ID
             )
             URI_MATCHER.addURI(
                 CONTENT_AUTHORITY,
@@ -51,7 +50,7 @@ class MovieProvider : ContentProvider() {
             )
             URI_MATCHER.addURI(
                 CONTENT_AUTHORITY,
-                Reviews.TABLE_NAME, URI_REVIEW_ID
+                Reviews.TABLE_NAME + "/#", URI_REVIEW_ID
             )
             URI_MATCHER.addURI(
                 CONTENT_AUTHORITY,
@@ -59,7 +58,7 @@ class MovieProvider : ContentProvider() {
             )
             URI_MATCHER.addURI(
                 CONTENT_AUTHORITY,
-                Trailers.TABLE_NAME, URI_TRAILER_ID
+                Trailers.TABLE_NAME + "/#", URI_TRAILER_ID
             )
         }
     }
@@ -83,9 +82,15 @@ class MovieProvider : ContentProvider() {
             Movies.TABLE_NAME + " JOIN " + Trailers.TABLE_NAME + " ON " + Movies.TABLE_NAME + "." + Movies.COL_ID + " = " + Trailers.TABLE_NAME + "." + Trailers.COL_MOVIE_ID +
                     " JOIN " + Movies.TABLE_NAME + " ON " + Reviews.TABLE_NAME + "." + Movies.COL_ID + " = " + Reviews.TABLE_NAME + "." + Reviews.COL_MOVIE_ID
 
+        val movieTable =
+            Movies.TABLE_NAME + " JOIN " + Genres.TABLE_NAME + " ON " + Movies.TABLE_NAME + "." + Movies.COL_GENRE_ID + " = " + Genres.TABLE_NAME + "." + Genres.COL_ID
+        val trailerTable =
+            Movies.TABLE_NAME + " JOIN " + Trailers.TABLE_NAME + " ON " + Movies.TABLE_NAME + "." + Movies.COL_ID + " = " + Trailers.TABLE_NAME + "." + Trailers.COL_MOVIE_ID
+        val reviewTable =
+            Movies.TABLE_NAME + " JOIN " + Reviews.TABLE_NAME + " ON " + Movies.TABLE_NAME + "." + Movies.COL_ID + " = " + Reviews.TABLE_NAME + "." + Reviews.COL_MOVIE_ID
         when (matchCode) {
             URI_MOVIES -> {
-                queryBuilder.tables = Movies.TABLE_NAME
+                queryBuilder.tables = movieTable
             }
 
             URI_GENRES -> {
@@ -93,11 +98,11 @@ class MovieProvider : ContentProvider() {
             }
 
             URI_TRAILERS -> {
-                queryBuilder.tables = Trailers.TABLE_NAME
+                queryBuilder.tables = trailerTable
             }
 
             URI_REVIEWS -> {
-                queryBuilder.tables = Reviews.TABLE_NAME
+                queryBuilder.tables = reviewTable
             }
 
             else -> throw IllegalArgumentException("Illegal query. Match code=$matchCode; uri=$uri")
@@ -119,6 +124,26 @@ class MovieProvider : ContentProvider() {
                     for (value in values) {
 
                         val _id = db?.insert(Genres.TABLE_NAME, null, value)
+                        if (_id != (-1).toLong()) {
+                            rowsInserted++
+                        }
+                    }
+                    db?.setTransactionSuccessful()
+                } finally {
+                    db?.endTransaction()
+                }
+                if (rowsInserted > 0) {
+                    context!!.contentResolver.notifyChange(uri, null)
+                }
+                return rowsInserted
+            }
+            URI_MOVIES -> {
+                db?.beginTransaction()
+                var rowsInserted = 0
+                try {
+                    for (value in values) {
+
+                        val _id = db?.insert(Movies.TABLE_NAME, null, value)
                         if (_id != (-1).toLong()) {
                             rowsInserted++
                         }
@@ -190,8 +215,7 @@ class MovieProvider : ContentProvider() {
             }
 
             URI_TRAILERS -> {
-
-                val _id = db?.insert(Movies.TABLE_NAME, null, contentValues)
+                val _id = db?.insert(Trailers.TABLE_NAME, null, contentValues)
                 if (_id != (-1).toLong()) {
                     context!!.contentResolver.notifyChange(uri, null)
                 }
@@ -200,8 +224,7 @@ class MovieProvider : ContentProvider() {
             }
 
             URI_REVIEWS -> {
-
-                val _id = db?.insert(Movies.TABLE_NAME, null, contentValues)
+                val _id = db?.insert(Reviews.TABLE_NAME, null, contentValues)
                 if (_id != (-1).toLong()) {
                     context!!.contentResolver.notifyChange(uri, null)
                 }
@@ -225,20 +248,17 @@ class MovieProvider : ContentProvider() {
                      "DELETE FROM movies WHERE movie_id = '" +
                              MoviesPersistenceContract.Movies.COL_CODE + "'")
              }*/
-            URI_MOVIE_ID -> {
+            URI_MOVIES -> {
                 numDeleted = db!!.delete(
-                    Movies.TABLE_NAME,
-                    Movies.COL_ID + " = ?",
-                    arrayOf(uri.toString())
+                    Movies.TABLE_NAME, selection, selectionArgs
                 )
-                // reset _ID
                 db.execSQL(
                     "DELETE FROM movies WHERE movie_id = '" +
-                            Movies.TABLE_NAME + "'"
+                            Movies.COL_ID + "'"
                 )
             }
-            URI_TRAILER_ID -> {
-                numDeleted = db!!.delete(
+            URI_TRAILERS -> {
+                /*numDeleted = db!!.delete(
                     Trailers.TABLE_NAME,
                     Trailers.COL_MOVIE_ID + " = ?",
                     arrayOf((ContentUris.parseId(uri)).toString())
@@ -247,23 +267,28 @@ class MovieProvider : ContentProvider() {
                 db.execSQL(
                     ("DELETE FROM trailers WHERE movie_id = '" +
                             Trailers.TABLE_NAME + "'")
+                )*/
+                numDeleted = db!!.delete(
+                    Trailers.TABLE_NAME, selection, selectionArgs
+                )
+                db.execSQL(
+                    "DELETE FROM trailers WHERE movie_id = '" +
+                            Trailers.COL_MOVIE_ID + "'"
                 )
             }
-            URI_REVIEW_ID -> {
+            URI_REVIEWS -> {
                 numDeleted = db!!.delete(
-                    Movies.TABLE_NAME,
-                    Movies.COL_ID + " = ?",
-                    arrayOf((ContentUris.parseId(uri)).toString())
+                    Reviews.TABLE_NAME, selection, selectionArgs
                 )
-                // reset _ID
                 db.execSQL(
-                    ("DELETE FROM reviews WHERE movie_id = '" +
-                            Reviews.TABLE_NAME + "'")
+                    "DELETE FROM reviews WHERE movie_id = '" +
+                            Reviews.COL_MOVIE_ID + "'"
                 )
             }
             else -> throw UnsupportedOperationException("Unknown uri: $uri")
         }
 
+        context.contentResolver.notifyChange(uri, null)
         return numDeleted
     }
 

@@ -5,7 +5,7 @@ import android.net.Uri
 import android.provider.BaseColumns
 
 
-object MoviesPersistenceContract {
+object MovieContract {
 
     val CONTENT_AUTHORITY = "com.khinthirisoe.popularmoviesappstage2"
     val BASE_CONTENT_URI = Uri.parse("content://$CONTENT_AUTHORITY")

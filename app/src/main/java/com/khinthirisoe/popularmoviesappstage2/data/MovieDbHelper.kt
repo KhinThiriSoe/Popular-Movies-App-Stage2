@@ -3,10 +3,10 @@ package com.khinthirisoe.popularmoviesappstage2.data
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import com.khinthirisoe.popularmoviesappstage2.data.MoviesPersistenceContract.Genres
-import com.khinthirisoe.popularmoviesappstage2.data.MoviesPersistenceContract.Movies
-import com.khinthirisoe.popularmoviesappstage2.data.MoviesPersistenceContract.Reviews
-import com.khinthirisoe.popularmoviesappstage2.data.MoviesPersistenceContract.Trailers
+import com.khinthirisoe.popularmoviesappstage2.data.MovieContract.Genres
+import com.khinthirisoe.popularmoviesappstage2.data.MovieContract.Movies
+import com.khinthirisoe.popularmoviesappstage2.data.MovieContract.Reviews
+import com.khinthirisoe.popularmoviesappstage2.data.MovieContract.Trailers
 
 
 class MoviesDbHelper(context: Context) :

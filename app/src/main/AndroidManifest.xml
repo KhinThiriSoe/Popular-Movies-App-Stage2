@@ -15,21 +15,21 @@
             android:roundIcon="@mipmap/ic_launcher"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".ui.base.BaseActivity"/>
-        <activity android:name=".ui.main.view.MainActivity">
+        <activity android:name="com.khinthirisoe.popularmoviesappstage2.core.base.BaseActivity"/>
+        <activity android:name="com.khinthirisoe.popularmoviesappstage2.movies.overview.view.MovieActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".ui.detail.view.DetailActivity"
+        <activity android:name="com.khinthirisoe.popularmoviesappstage2.movies.details.view.DetailsActivity"
                   android:theme="@style/AppTheme.NoActionBar"/>
         <activity
-                android:name=".ui.settings.SettingsActivity"
+                android:name="com.khinthirisoe.popularmoviesappstage2.settings.SettingsActivity"
                 android:label="@string/title_activity_settings">
         </activity>
-        <activity android:name=".ui.youtube.YouTubePlayerActivity">
+        <activity android:name="com.khinthirisoe.popularmoviesappstage2.youtube.YouTubePlayerActivity">
         </activity>
         <provider
                 android:name=".data.MovieProvider"

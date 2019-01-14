@@ -1,6 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
       xmlns:app="http://schemas.android.com/apk/res-auto"
-      tools:context=".ui.detail.view.DetailActivity">
+      tools:context=".movies.details.view.DetailsActivity">
     <item
             android:id="@+id/action_save"
             android:orderInCategory="200"
