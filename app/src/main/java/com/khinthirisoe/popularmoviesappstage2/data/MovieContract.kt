@@ -38,7 +38,7 @@ object MovieContract {
             val COLUMNS = arrayOf(
                 arrayOf(
                     COL_ID,
-                    TYPE_PRIMARY_KEY_TEXT_UNIQUE
+                    TYPE_TEXT_NOT_NULL
                 ),
                 arrayOf(
                     COL_NAME,
@@ -238,7 +238,7 @@ object MovieContract {
                     String.format(
                         DbConstant.CURLY_BRACE,
                         COL_MOVIE_ID
-                    ) + REFERENCES + Movies.TABLE_NAME + String.format(DbConstant.CURLY_BRACE, Movies._ID)
+                    ) + REFERENCES + MovieInfo.TABLE_NAME + String.format(DbConstant.CURLY_BRACE, MovieInfo._ID)
                 ),
                 arrayOf(
                     FOREIGN_KEY,

@@ -78,19 +78,9 @@ class MovieProvider : ContentProvider() {
         val mDatabase = mDbHelper!!.readableDatabase
         val matchCode = URI_MATCHER.match(uri)
 
-        val joinTable =
-            Movies.TABLE_NAME + " JOIN " + Trailers.TABLE_NAME + " ON " + Movies.TABLE_NAME + "." + Movies.COL_ID + " = " + Trailers.TABLE_NAME + "." + Trailers.COL_MOVIE_ID +
-                    " JOIN " + Movies.TABLE_NAME + " ON " + Reviews.TABLE_NAME + "." + Movies.COL_ID + " = " + Reviews.TABLE_NAME + "." + Reviews.COL_MOVIE_ID
-
-        val movieTable =
-            Movies.TABLE_NAME + " JOIN " + Genres.TABLE_NAME + " ON " + Movies.TABLE_NAME + "." + Movies.COL_GENRE_ID + " = " + Genres.TABLE_NAME + "." + Genres.COL_ID
-        val trailerTable =
-            Movies.TABLE_NAME + " JOIN " + Trailers.TABLE_NAME + " ON " + Movies.TABLE_NAME + "." + Movies.COL_ID + " = " + Trailers.TABLE_NAME + "." + Trailers.COL_MOVIE_ID
-        val reviewTable =
-            Movies.TABLE_NAME + " JOIN " + Reviews.TABLE_NAME + " ON " + Movies.TABLE_NAME + "." + Movies.COL_ID + " = " + Reviews.TABLE_NAME + "." + Reviews.COL_MOVIE_ID
         when (matchCode) {
             URI_MOVIES -> {
-                queryBuilder.tables = movieTable
+                queryBuilder.tables = Movies.TABLE_NAME
             }
 
             URI_GENRES -> {
@@ -98,11 +88,11 @@ class MovieProvider : ContentProvider() {
             }
 
             URI_TRAILERS -> {
-                queryBuilder.tables = trailerTable
+                queryBuilder.tables = Trailers.TABLE_NAME
             }
 
             URI_REVIEWS -> {
-                queryBuilder.tables = reviewTable
+                queryBuilder.tables = Reviews.TABLE_NAME
             }
 
             else -> throw IllegalArgumentException("Illegal query. Match code=$matchCode; uri=$uri")
@@ -240,49 +230,19 @@ class MovieProvider : ContentProvider() {
         val db = mDbHelper?.writableDatabase
         val numDeleted: Int
         when (URI_MATCHER.match(uri)) {
-            /* URI_MOVIES -> {
-                 numDeleted = db!!.delete(
-                     MoviesPersistenceContract.Movies.TABLE_NAME, selection, selectionArgs
-                 )
-                 db.execSQL(
-                     "DELETE FROM movies WHERE movie_id = '" +
-                             MoviesPersistenceContract.Movies.COL_CODE + "'")
-             }*/
             URI_MOVIES -> {
                 numDeleted = db!!.delete(
                     Movies.TABLE_NAME, selection, selectionArgs
                 )
-                db.execSQL(
-                    "DELETE FROM movies WHERE movie_id = '" +
-                            Movies.COL_ID + "'"
-                )
             }
             URI_TRAILERS -> {
-                /*numDeleted = db!!.delete(
-                    Trailers.TABLE_NAME,
-                    Trailers.COL_MOVIE_ID + " = ?",
-                    arrayOf((ContentUris.parseId(uri)).toString())
-                )
-                // reset _ID
-                db.execSQL(
-                    ("DELETE FROM trailers WHERE movie_id = '" +
-                            Trailers.TABLE_NAME + "'")
-                )*/
                 numDeleted = db!!.delete(
                     Trailers.TABLE_NAME, selection, selectionArgs
-                )
-                db.execSQL(
-                    "DELETE FROM trailers WHERE movie_id = '" +
-                            Trailers.COL_MOVIE_ID + "'"
                 )
             }
             URI_REVIEWS -> {
                 numDeleted = db!!.delete(
                     Reviews.TABLE_NAME, selection, selectionArgs
-                )
-                db.execSQL(
-                    "DELETE FROM reviews WHERE movie_id = '" +
-                            Reviews.COL_MOVIE_ID + "'"
                 )
             }
             else -> throw UnsupportedOperationException("Unknown uri: $uri")

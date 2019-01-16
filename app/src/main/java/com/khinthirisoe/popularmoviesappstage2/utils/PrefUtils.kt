@@ -21,4 +21,9 @@ object PrefUtils {
         getDefaultSharedPreferences(context).edit().putBoolean("FIRST_LOAD_DATA_KEY", value).apply()
     }
 
+    fun getSortedTypeKey(context: Context): String? {
+        return getDefaultSharedPreferences(context).getString("sortedType", null)
+    }
+
+
 }

@@ -2,15 +2,15 @@ package com.khinthirisoe.popularmoviesappstage2.di
 
 import com.google.gson.Gson
 import com.khinthirisoe.popularmoviesappstage2.core.config.ApiUrl
-import com.khinthirisoe.popularmoviesappstage2.movies.details.DetailsContract
-import com.khinthirisoe.popularmoviesappstage2.movies.details.model.DetailsRepository
-import com.khinthirisoe.popularmoviesappstage2.movies.details.presenter.DetailsPresenter
-import com.khinthirisoe.popularmoviesappstage2.movies.details.view.DetailsActivity
-import com.khinthirisoe.popularmoviesappstage2.movies.overview.MainContract
-import com.khinthirisoe.popularmoviesappstage2.movies.overview.model.MovieApiService
-import com.khinthirisoe.popularmoviesappstage2.movies.overview.model.MovieRepository
-import com.khinthirisoe.popularmoviesappstage2.movies.overview.presenter.MoviePresenter
-import com.khinthirisoe.popularmoviesappstage2.movies.overview.view.MovieActivity
+import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.DetailsContract
+import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.model.DetailsRepository
+import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.presenter.DetailsPresenter
+import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.view.DetailsActivity
+import com.khinthirisoe.popularmoviesappstage2.ui.movies.overview.MovieContract
+import com.khinthirisoe.popularmoviesappstage2.ui.movies.overview.model.MovieApiService
+import com.khinthirisoe.popularmoviesappstage2.ui.movies.overview.model.MovieRepository
+import com.khinthirisoe.popularmoviesappstage2.ui.movies.overview.presenter.MoviePresenter
+import com.khinthirisoe.popularmoviesappstage2.ui.movies.overview.view.MovieActivity
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.dsl.module.module
@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit
 val MovieAppModule = module {
 
     factory { MovieActivity() }
-    factory { MoviePresenter(get()) as MainContract.Presenter }
+    factory { MoviePresenter(get()) as MovieContract.Presenter }
     single { MovieRepository(get()) }
 
     factory { DetailsActivity() }
