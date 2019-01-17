@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.khinthirisoe.popularmoviesappstage2.GlideApp
 import com.khinthirisoe.popularmoviesappstage2.R
-import com.khinthirisoe.popularmoviesappstage2.core.config.ApiUrl
+import com.khinthirisoe.popularmoviesappstage2.data.network.ApiEndPoint
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.view.DetailsActivity
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.overview.model.MovieResult
 import kotlinx.android.synthetic.main.list_movie.view.*
@@ -38,7 +38,7 @@ class MovieAdapter(private val mContext: Context, private var mListData: Mutable
 
         if (mListData != null) {
             GlideApp.with(mContext)
-                .load(ApiUrl.POSTER_PATH + mListData!![position].posterPath)
+                .load(ApiEndPoint.POSTER_PATH + mListData!![position].posterPath)
                 .placeholder(R.drawable.ic_movie)
                 .into(holder.poster)
 

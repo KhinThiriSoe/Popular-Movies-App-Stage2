@@ -13,11 +13,14 @@
  * limitations under the License
  */
 
-package com.khinthirisoe.popularmoviesappstage2.utils
+package com.khinthirisoe.popularmoviesappstage2.data.pref
 
-object AppConstants {
+interface PreferencesHelper {
 
-    val DB_NAME = "movie.db"
-    val PREF_NAME = "movie_pref"
-    val API_KEY = "f620efedee20f579541e84617932d567"
+    val apiKey: String
+
+    var firstOpen: Boolean
+
+    var sortedType: String
+
 }

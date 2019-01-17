@@ -32,7 +32,7 @@
         <activity android:name="com.khinthirisoe.popularmoviesappstage2.ui.youtube.YouTubePlayerActivity">
         </activity>
         <provider
-                android:name=".data.MovieProvider"
+                android:name=".data.db.MovieProvider"
                 android:authorities="com.khinthirisoe.popularmoviesappstage2"
                 android:exported="true" />
     </application>

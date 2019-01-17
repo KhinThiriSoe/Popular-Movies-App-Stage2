@@ -1,13 +1,11 @@
 package com.khinthirisoe.popularmoviesappstage2.ui.movies.overview
 
-import com.khinthirisoe.popularmoviesappstage2.core.base.BasePresenter
-import com.khinthirisoe.popularmoviesappstage2.core.base.BaseView
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.overview.model.Genre
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.overview.model.MovieResult
 
 interface MovieContract {
 
-    interface View : BaseView<Presenter> {
+    interface View {
         fun showMoviesList(lists: ArrayList<MovieResult>)
 
         fun saveGenreList(lists: ArrayList<Genre>)
@@ -19,7 +17,7 @@ interface MovieContract {
         fun hideProgress()
     }
 
-    interface Presenter : BasePresenter<View> {
+    interface Presenter {
 
         fun onAttachView(view: View)
 

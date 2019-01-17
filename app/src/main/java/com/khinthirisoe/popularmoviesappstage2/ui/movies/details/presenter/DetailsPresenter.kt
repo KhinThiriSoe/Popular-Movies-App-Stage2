@@ -1,7 +1,7 @@
 package com.khinthirisoe.popularmoviesappstage2.ui.movies.details.presenter
 
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.DetailsContract
-import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.model.DetailsRepository
+import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.model.DetailsInteractor
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.model.Movies
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.model.ReviewsResult
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.model.TrailersResult
@@ -9,7 +9,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import org.koin.standalone.KoinComponent
 
-class DetailsPresenter constructor(var interactor: DetailsRepository) : DetailsContract.Presenter, KoinComponent {
+class DetailsPresenter constructor(var interactor: DetailsInteractor) : DetailsContract.Presenter, KoinComponent {
     var view: DetailsContract.View? = null
     var videoList: ArrayList<TrailersResult>? = null
     var reviewsList: ArrayList<ReviewsResult>? = null

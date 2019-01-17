@@ -13,11 +13,17 @@
  * limitations under the License
  */
 
-package com.khinthirisoe.popularmoviesappstage2.utils
+package com.khinthirisoe.popularmoviesappstage2.data.network
 
-object AppConstants {
+object ApiEndPoint {
 
-    val DB_NAME = "movie.db"
-    val PREF_NAME = "movie_pref"
-    val API_KEY = "f620efedee20f579541e84617932d567"
+    const val BASE_URL = "https://api.themoviedb.org/"
+    const val VERSION = "3/"
+    const val GET_GENRES = "genre/movie/list"
+    const val DISCOVER_MOVIES = "discover/movie"
+    const val MOVIE_DETAILS = "movie/{movie_id}"
+    const val POSTER_PATH = "http://image.tmdb.org/t/p/w500/"
+    const val GET_VIDEO = "movie/{movie_id}/videos"
+    const val GET_REVIEWS = "movie/{movie_id}/reviews"
+
 }

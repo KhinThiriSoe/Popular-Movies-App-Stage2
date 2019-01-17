@@ -1,12 +1,13 @@
-package com.khinthirisoe.popularmoviesappstage2.data
+package com.khinthirisoe.popularmoviesappstage2.data.db
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import com.khinthirisoe.popularmoviesappstage2.data.MovieContract.Genres
-import com.khinthirisoe.popularmoviesappstage2.data.MovieContract.Movies
-import com.khinthirisoe.popularmoviesappstage2.data.MovieContract.Reviews
-import com.khinthirisoe.popularmoviesappstage2.data.MovieContract.Trailers
+import com.khinthirisoe.popularmoviesappstage2.data.db.MovieContract.Genres
+import com.khinthirisoe.popularmoviesappstage2.data.db.MovieContract.Movies
+import com.khinthirisoe.popularmoviesappstage2.data.db.MovieContract.Reviews
+import com.khinthirisoe.popularmoviesappstage2.data.db.MovieContract.Trailers
+import com.khinthirisoe.popularmoviesappstage2.utils.AppConstants
 
 
 class MoviesDbHelper(context: Context) :
@@ -19,7 +20,7 @@ class MoviesDbHelper(context: Context) :
     companion object {
 
         val DATABASE_VERSION = 8
-        val DATABASE_NAME = "Movie.db"
+        val DATABASE_NAME = AppConstants.DB_NAME
     }
 
     override fun onCreate(db: SQLiteDatabase) {

@@ -1,4 +1,4 @@
-package com.khinthirisoe.popularmoviesappstage2.data
+package com.khinthirisoe.popularmoviesappstage2.data.db
 
 object DbConstant {
 

@@ -1,14 +1,12 @@
 package com.khinthirisoe.popularmoviesappstage2.ui.movies.details
 
-import com.khinthirisoe.popularmoviesappstage2.core.base.BasePresenter
-import com.khinthirisoe.popularmoviesappstage2.core.base.BaseView
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.model.Movies
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.model.ReviewsResult
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.model.TrailersResult
 
 interface DetailsContract {
 
-    interface View : BaseView<Presenter> {
+    interface View{
 
         fun showMovieDetail(detail: Movies)
 
@@ -23,7 +21,7 @@ interface DetailsContract {
         fun hideProgress()
     }
 
-    interface Presenter : BasePresenter<View> {
+    interface Presenter{
 
         fun onAttachView(view: View)
 

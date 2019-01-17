@@ -1,4 +1,4 @@
-package com.khinthirisoe.popularmoviesappstage2.data
+package com.khinthirisoe.popularmoviesappstage2.data.db
 
 import android.content.ContentResolver
 import android.net.Uri
@@ -73,7 +73,10 @@ object MovieContract {
                     String.format(
                         DbConstant.CURLY_BRACE,
                         COL_GENRE_ID
-                    ) + REFERENCES + Genres.TABLE_NAME + String.format(DbConstant.CURLY_BRACE, Genres.COL_ID)
+                    ) + REFERENCES + Genres.TABLE_NAME + String.format(
+                        DbConstant.CURLY_BRACE,
+                        Genres.COL_ID
+                    )
                 )
             )
 
@@ -99,8 +102,14 @@ object MovieContract {
             val COL_NAME = "genre_name"
 
             val COLUMNS = arrayOf(
-                arrayOf(COL_ID, TYPE_PRIMARY_KEY_TEXT_UNIQUE),
-                arrayOf(COL_NAME, TYPE_TEXT)
+                arrayOf(
+                    COL_ID,
+                    TYPE_PRIMARY_KEY_TEXT_UNIQUE
+                ),
+                arrayOf(
+                    COL_NAME,
+                    TYPE_TEXT
+                )
             )
 
             val CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY + DbConstant.SEPARATOR + TABLE_NAME)
@@ -146,7 +155,10 @@ object MovieContract {
                     String.format(
                         DbConstant.CURLY_BRACE,
                         COL_MOVIE_ID
-                    ) + REFERENCES + Movies.TABLE_NAME + String.format(DbConstant.CURLY_BRACE, Movies.COL_ID)
+                    ) + REFERENCES + Movies.TABLE_NAME + String.format(
+                        DbConstant.CURLY_BRACE,
+                        Movies.COL_ID
+                    )
                 )
             )
 
@@ -197,7 +209,10 @@ object MovieContract {
                     String.format(
                         DbConstant.CURLY_BRACE,
                         COL_MOVIE_ID
-                    ) + REFERENCES + Movies.TABLE_NAME + String.format(DbConstant.CURLY_BRACE, Movies.COL_ID)
+                    ) + REFERENCES + Movies.TABLE_NAME + String.format(
+                        DbConstant.CURLY_BRACE,
+                        Movies.COL_ID
+                    )
                 )
             )
 
@@ -212,60 +227,4 @@ object MovieContract {
             }
         }
     }
-
-    /*class MovieDetail : BaseColumns {
-        companion object {
-
-            val TABLE_NAME = "details"
-
-            val COL_MOVIE_ID = "movie_id"
-            val COL_GENRE_ID = "genre_id"
-            val COL_TRAILER_ID = "trailer_id"
-            val COL_REVIEW_ID = "review_id"
-
-            val FOREIGN_KEY = "FOREIGN KEY"
-
-            val REFERENCES = " REFERENCES "
-
-            val COLUMNS = arrayOf(
-                arrayOf(BaseColumns._ID, TYPE_PRIMARY_KEY_AUTOINCREMENT),
-                arrayOf(COL_MOVIE_ID, TYPE_TEXT),
-                arrayOf(COL_GENRE_ID, TYPE_TEXT),
-                arrayOf(COL_TRAILER_ID, TYPE_TEXT),
-                arrayOf(COL_REVIEW_ID, TYPE_TEXT),
-                arrayOf(
-                    FOREIGN_KEY,
-                    String.format(
-                        DbConstant.CURLY_BRACE,
-                        COL_MOVIE_ID
-                    ) + REFERENCES + MovieInfo.TABLE_NAME + String.format(DbConstant.CURLY_BRACE, MovieInfo._ID)
-                ),
-                arrayOf(
-                    FOREIGN_KEY,
-                    String.format(
-                        DbConstant.CURLY_BRACE,
-                        COL_GENRE_ID
-                    ) + REFERENCES + Genres.TABLE_NAME + String.format(DbConstant.CURLY_BRACE, Genres._ID)
-                ),
-                arrayOf(
-                    FOREIGN_KEY,
-                    String.format(
-                        DbConstant.CURLY_BRACE,
-                        COL_TRAILER_ID
-                    ) + REFERENCES + Trailers.TABLE_NAME + String.format(DbConstant.CURLY_BRACE, Trailers._ID)
-                ),
-                arrayOf(
-                    FOREIGN_KEY,
-                    String.format(
-                        DbConstant.CURLY_BRACE,
-                        COL_REVIEW_ID
-                    ) + REFERENCES + Reviews.TABLE_NAME + String.format(DbConstant.CURLY_BRACE, Reviews._ID)
-                )
-            )
-
-            val CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY + DbConstant.SEPARATOR + TABLE_NAME)
-            val CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + DbConstant.SEPARATOR + TABLE_NAME
-            val ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + DbConstant.SEPARATOR + TABLE_NAME
-        }
-    }*/
 }

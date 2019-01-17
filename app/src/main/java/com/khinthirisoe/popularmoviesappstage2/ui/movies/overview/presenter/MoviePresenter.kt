@@ -2,13 +2,13 @@ package com.khinthirisoe.popularmoviesappstage2.ui.movies.overview.presenter
 
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.overview.MovieContract
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.overview.model.Genre
-import com.khinthirisoe.popularmoviesappstage2.ui.movies.overview.model.MovieRepository
+import com.khinthirisoe.popularmoviesappstage2.ui.movies.overview.model.MovieInteractor
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.overview.model.MovieResult
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import org.koin.standalone.KoinComponent
 
-class MoviePresenter constructor(var interactor: MovieRepository) : MovieContract.Presenter, KoinComponent {
+class MoviePresenter constructor(var interactor: MovieInteractor) : MovieContract.Presenter, KoinComponent {
     var view: MovieContract.View? = null
     var moviesList: ArrayList<MovieResult>? = null
     var genresList: ArrayList<Genre>? = null

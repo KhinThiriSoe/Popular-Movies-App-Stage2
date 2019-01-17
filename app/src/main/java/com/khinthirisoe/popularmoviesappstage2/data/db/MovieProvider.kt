@@ -1,4 +1,4 @@
-package com.khinthirisoe.popularmoviesappstage2.data
+package com.khinthirisoe.popularmoviesappstage2.data.db
 
 import android.content.ContentProvider
 import android.content.ContentValues
@@ -7,11 +7,11 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteQueryBuilder
 import android.net.Uri
 import androidx.annotation.NonNull
-import com.khinthirisoe.popularmoviesappstage2.data.MovieContract.CONTENT_AUTHORITY
-import com.khinthirisoe.popularmoviesappstage2.data.MovieContract.Genres
-import com.khinthirisoe.popularmoviesappstage2.data.MovieContract.Movies
-import com.khinthirisoe.popularmoviesappstage2.data.MovieContract.Reviews
-import com.khinthirisoe.popularmoviesappstage2.data.MovieContract.Trailers
+import com.khinthirisoe.popularmoviesappstage2.data.db.MovieContract.CONTENT_AUTHORITY
+import com.khinthirisoe.popularmoviesappstage2.data.db.MovieContract.Genres
+import com.khinthirisoe.popularmoviesappstage2.data.db.MovieContract.Movies
+import com.khinthirisoe.popularmoviesappstage2.data.db.MovieContract.Reviews
+import com.khinthirisoe.popularmoviesappstage2.data.db.MovieContract.Trailers
 
 
 class MovieProvider : ContentProvider() {
@@ -38,7 +38,8 @@ class MovieProvider : ContentProvider() {
             )
             URI_MATCHER.addURI(
                 CONTENT_AUTHORITY,
-                Movies.TABLE_NAME + "/#", URI_MOVIE_ID
+                Movies.TABLE_NAME + "/#",
+                URI_MOVIE_ID
             )
             URI_MATCHER.addURI(
                 CONTENT_AUTHORITY,
@@ -50,15 +51,18 @@ class MovieProvider : ContentProvider() {
             )
             URI_MATCHER.addURI(
                 CONTENT_AUTHORITY,
-                Reviews.TABLE_NAME + "/#", URI_REVIEW_ID
+                Reviews.TABLE_NAME + "/#",
+                URI_REVIEW_ID
             )
             URI_MATCHER.addURI(
                 CONTENT_AUTHORITY,
-                Trailers.TABLE_NAME, URI_TRAILERS
+                Trailers.TABLE_NAME,
+                URI_TRAILERS
             )
             URI_MATCHER.addURI(
                 CONTENT_AUTHORITY,
-                Trailers.TABLE_NAME + "/#", URI_TRAILER_ID
+                Trailers.TABLE_NAME + "/#",
+                URI_TRAILER_ID
             )
         }
     }

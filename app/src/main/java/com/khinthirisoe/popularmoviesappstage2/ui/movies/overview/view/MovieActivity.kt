@@ -1,9 +1,7 @@
 package com.khinthirisoe.popularmoviesappstage2.ui.movies.overview.view
 
-import android.content.ContentValues
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -15,19 +13,20 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.khinthirisoe.popularmoviesappstage2.R
-import com.khinthirisoe.popularmoviesappstage2.data.MovieContract.Genres
-import com.khinthirisoe.popularmoviesappstage2.data.MovieContract.Movies
+import com.khinthirisoe.popularmoviesappstage2.data.db.repository.MovieRepository
+import com.khinthirisoe.popularmoviesappstage2.data.pref.AppPreferencesHelper
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.overview.MovieContract
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.overview.model.Genre
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.overview.model.MovieResult
 import com.khinthirisoe.popularmoviesappstage2.ui.settings.SettingsActivity
-import com.khinthirisoe.popularmoviesappstage2.utils.PrefUtils
 import org.koin.android.ext.android.inject
 
 
 class MovieActivity : AppCompatActivity(), MovieContract.View, SwipeRefreshLayout.OnRefreshListener {
 
     val presenter: MovieContract.Presenter by inject()
+    val repository: MovieRepository by inject()
+    val preferenceHelper: AppPreferencesHelper by inject()
 
     private var mAdapter: MovieAdapter? = null
     private lateinit var mProgressBar: ProgressBar
@@ -49,22 +48,19 @@ class MovieActivity : AppCompatActivity(), MovieContract.View, SwipeRefreshLayou
 
         presenter.onAttachView(this)
 
-        sortedType = PrefUtils.getSortedTypeKey(this) ?: "1"
-
         initView()
 
-        setUpLoadMoreListener()
+//        setUpLoadMoreListener()
 
-        val firstLoad = PrefUtils.getFirstLoadDataKey(this)
-        if (firstLoad!!) {
+        val firstLoad = preferenceHelper.firstOpen
+        if (firstLoad) {
             loadGenreList()
         }
     }
 
     private fun loadGenreList() {
-        PrefUtils.putFirstLoadDataKey(this, false)
-        presenter.fetchGenres(PrefUtils.getApiKey(this))
-
+        presenter.fetchGenres(preferenceHelper.apiKey)
+        preferenceHelper.firstOpen = false
     }
 
     private fun initView() {
@@ -102,7 +98,7 @@ class MovieActivity : AppCompatActivity(), MovieContract.View, SwipeRefreshLayou
     }
 
     private fun loadMoviesList() {
-        presenter.loadMoviesList(sortedType, pageNumber, PrefUtils.getApiKey(this@MovieActivity))
+        presenter.loadMoviesList(sortedType, pageNumber, preferenceHelper.apiKey)
     }
 
     override fun onRefresh() {
@@ -112,16 +108,7 @@ class MovieActivity : AppCompatActivity(), MovieContract.View, SwipeRefreshLayou
     }
 
     override fun saveGenreList(lists: ArrayList<Genre>) {
-        val contentValues = ArrayList<ContentValues>(lists.size)
-        for (genre in lists) {
-            val values = ContentValues(2)
-            values.put(Genres.COL_ID, genre.id)
-            values.put(Genres.COL_NAME, genre.name)
-            contentValues.add(values)
-        }
-        val id = contentResolver.bulkInsert(Genres.CONTENT_URI, contentValues.toTypedArray())
-        Log.d("message", "bulk insert " + id.toString())
-
+        repository.saveGenreList(this, lists)
     }
 
     override fun showMoviesList(lists: ArrayList<MovieResult>) {
@@ -161,7 +148,9 @@ class MovieActivity : AppCompatActivity(), MovieContract.View, SwipeRefreshLayou
             loadMoviesList()
         } else if (sortedType == "favourite") {
             supportActionBar?.title = "Favourite Movies"
-            loadMoviesListFromDb()
+            val list = repository.loadMoviesList(this)
+            mAdapter = MovieAdapter(this, list)
+            mRecyclerView.adapter = mAdapter
         } else {
             supportActionBar?.title = "Top Rated Movies"
             loadMoviesList()
@@ -169,61 +158,12 @@ class MovieActivity : AppCompatActivity(), MovieContract.View, SwipeRefreshLayou
 
     }
 
-    private fun loadMoviesListFromDb() {
-        val cursor = contentResolver.query(Movies.CONTENT_URI, null, null, null, null)
-
-        when {
-            cursor == null -> {
-                // error - log some message
-            }
-            cursor.count < 1 -> // nothing to show  - log some message
-            {
-                mAdapter = MovieAdapter(this, null)
-                mRecyclerView.adapter = mAdapter
-                Log.d("message", "detail cursor.getCount() < 1")
-
-            }
-            else -> {
-
-                val list = ArrayList<MovieResult>()
-                cursor.moveToFirst()
-                do {
-                    for (i in 0 until cursor.columnCount) {
-
-                        val id = cursor.getString(cursor.getColumnIndex("movie_id"))
-                        val name = cursor.getString(cursor.getColumnIndex("movie_name"))
-                        val back_path = cursor.getString(cursor.getColumnIndex("back_path"))
-                        val poster = cursor.getString(cursor.getColumnIndex("poster"))
-                        val average_vote = cursor.getString(cursor.getColumnIndex("average_vote"))
-                        val releaseDate = cursor.getString(cursor.getColumnIndex("release_date"))
-                        val overview = cursor.getString(cursor.getColumnIndex("overview"))
-
-                        val result = MovieResult(
-                            0, id.toInt(), false, average_vote.toDouble(), name, 0.0, poster, "", name,
-                            arrayListOf(), back_path, false, overview, releaseDate
-                        )
-
-                        list.add(result)
-                    }
-                } while (cursor.moveToNext())
-
-                val modifiedList = arrayListOf<MovieResult>()
-                for (i in list) {
-                    if (!modifiedList.contains(i)) {
-                        modifiedList.add(i)
-                    }
-                }
-
-                mAdapter = MovieAdapter(this, modifiedList)
-                mRecyclerView.adapter = mAdapter
-            }
-
-        }
-        cursor.close()
-    }
-
     private fun loadPreference(): String {
-        return PrefUtils.getSortedTypeKey(this) ?: "1"
+        sortedType = preferenceHelper.sortedType
+        if (sortedType == "1" || sortedType == "") {
+            sortedType = "popularity.desc"
+        }
+        return sortedType
     }
 
     override fun onDestroy() {

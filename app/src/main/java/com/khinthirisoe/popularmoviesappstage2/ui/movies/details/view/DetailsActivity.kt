@@ -18,22 +18,23 @@ import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.khinthirisoe.popularmoviesappstage2.GlideApp
 import com.khinthirisoe.popularmoviesappstage2.R
-import com.khinthirisoe.popularmoviesappstage2.core.config.ApiUrl
-import com.khinthirisoe.popularmoviesappstage2.data.MovieContract.Genres
-import com.khinthirisoe.popularmoviesappstage2.data.MovieContract.Movies
-import com.khinthirisoe.popularmoviesappstage2.data.MovieContract.Reviews
-import com.khinthirisoe.popularmoviesappstage2.data.MovieContract.Trailers
+import com.khinthirisoe.popularmoviesappstage2.data.db.MovieContract.Movies
+import com.khinthirisoe.popularmoviesappstage2.data.db.MovieContract.Reviews
+import com.khinthirisoe.popularmoviesappstage2.data.db.MovieContract.Trailers
+import com.khinthirisoe.popularmoviesappstage2.data.db.repository.DetailsRepository
+import com.khinthirisoe.popularmoviesappstage2.data.network.ApiEndPoint
+import com.khinthirisoe.popularmoviesappstage2.data.pref.AppPreferencesHelper
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.DetailsContract
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.model.ReviewsResult
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.model.TrailersResult
-import com.khinthirisoe.popularmoviesappstage2.ui.movies.overview.model.Genre
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.overview.model.MovieResult
-import com.khinthirisoe.popularmoviesappstage2.utils.PrefUtils
 import org.koin.android.ext.android.inject
 
 class DetailsActivity : AppCompatActivity(), DetailsContract.View {
 
     val presenter: DetailsContract.Presenter by inject()
+    val repository: DetailsRepository by inject()
+    val preferencesHelper: AppPreferencesHelper by inject()
 
     private var animationUp: Animation? = null
     private var animationDown: Animation? = null
@@ -75,7 +76,7 @@ class DetailsActivity : AppCompatActivity(), DetailsContract.View {
 
         setUpListener()
 
-        sortedType = PrefUtils.getSortedTypeKey(this) ?: "1"
+        sortedType = preferencesHelper.sortedType
 
         checkIntent()
 
@@ -113,7 +114,7 @@ class DetailsActivity : AppCompatActivity(), DetailsContract.View {
                 setUpUI(movieResult)
                 loadDataFromDb()
             } else {
-                presenter.loadList(movieId!!, PrefUtils.getApiKey(this))
+                presenter.loadList(movieId!!, preferencesHelper.apiKey)
             }
         }
     }
@@ -132,13 +133,22 @@ class DetailsActivity : AppCompatActivity(), DetailsContract.View {
 
         mTitle.text = detail.title
 
-        GlideApp.with(this)
-            .load(ApiUrl.POSTER_PATH + detail.backdropPath)
-            .placeholder(R.drawable.ic_movie)
-            .into(mBackPoster)
+        if (detail.backdropPath.isNotEmpty()) {
+            GlideApp.with(this)
+                .load(ApiEndPoint.POSTER_PATH + detail.backdropPath)
+                .placeholder(R.drawable.ic_movie)
+                .into(mBackPoster)
+        } else {
+
+            GlideApp.with(this)
+                .load(R.drawable.ic_movie)
+                .placeholder(R.drawable.ic_movie)
+                .into(mBackPoster)
+        }
+
 
         GlideApp.with(this)
-            .load(ApiUrl.POSTER_PATH + detail.posterPath)
+            .load(ApiEndPoint.POSTER_PATH + detail.posterPath)
             .placeholder(R.drawable.ic_movie)
             .into(mPoster)
 
@@ -157,103 +167,18 @@ class DetailsActivity : AppCompatActivity(), DetailsContract.View {
 
     private fun loadGenres() {
 
-        val cursor = contentResolver.query(
-            Movies.CONTENT_URI, null,
-            "movie_id=?",
-            arrayOf(movieId.toString()), null
-        )
+        val results = repository.loadGenres(this, movieId.toString())
 
-        when {
-            cursor == null -> {
-                // error - log some message
-            }
-            cursor.count < 1 -> // nothing to show  - log some message
-                Log.d("message", "cursor.getCount() < 1")
-            else -> {
-                val list = arrayListOf<String>()
-                cursor.moveToFirst()
-                Log.d("message", "count ${cursor.count} ")
-                do {
-                    val id = cursor.getString(cursor.getColumnIndex("genre_id"))
-
-                    Log.d("message", "genre_id $id ")
-                    list.add(id)
-                } while (cursor.moveToNext())
-
-                val generCursor = contentResolver.query(Genres.CONTENT_URI, null, null, null, null)
-                val genreName = arrayListOf<Genre>()
-                when {
-                    generCursor == null -> {
-                        // error - log some message
-                    }
-                    generCursor.count < 1 -> // nothing to show  - log some message
-                        Log.d("message", "cursor.getCount() < 1")
-                    else -> {
-                        generCursor.moveToFirst()
-                        Log.d("message", "cursor count " + generCursor.count)
-                        do {
-                            val id = generCursor.getInt(generCursor.getColumnIndex("genre_id"))
-                            val name = generCursor.getString(generCursor.getColumnIndex("genre_name"))
-                            val result = Genre(id, name)
-                            genreName.add(result)
-                        } while (generCursor.moveToNext())
-                    }
-
-                }
-                generCursor.close()
-                val results = arrayListOf<String>()
-
-                for (i in list) {
-                    for (item in 0 until genreName.size) {
-                        if (i == genreName[item].id.toString()) {
-                            results.add(genreName[item].name)
-                        }
-                    }
-                }
-
-
-                var name: String = ""
-                for (item in results) {
-                    name += "$item, "
-                }
-                mGenre.text = name.substring(0, name.length - 2)
-
-            }
+        var name: String = ""
+        for (item in results) {
+            name += "$item, "
         }
-        cursor.close()
+        mGenre.text = name.substring(0, name.length - 2)
     }
 
     private fun loadTrailers() {
 
-        val cursor = contentResolver.query(
-            Trailers.CONTENT_URI, null,
-            "movie_id=?",
-            arrayOf(movieId.toString()), null
-        )
-
-        val list = ArrayList<TrailersResult>()
-        when {
-            cursor == null -> {
-// error - log some message
-            }
-            cursor.count < 1 -> // nothing to show  - log some message
-                Log.d("message", "cursor.getCount() < 1")
-            else -> {
-                cursor.moveToFirst()
-                do {
-
-                    val id = cursor.getString(cursor.getColumnIndex("trailer_id"))
-                    val key = cursor.getString(cursor.getColumnIndex("trailer_key"))
-
-                    Log.d("message", "id $id key $key")
-
-                    val result = TrailersResult(id, "", "", key, "", "", 0, "")
-
-                    list.add(result)
-                } while (cursor.moveToNext())
-            }
-        }
-        cursor.close()
+        val list = repository.loadTrailers(this, movieId.toString())
 
         if (list.size == 0) mRecyclerVideo.visibility = View.GONE
 
@@ -262,36 +187,8 @@ class DetailsActivity : AppCompatActivity(), DetailsContract.View {
     }
 
     private fun loadReviews() {
-        val cursor = contentResolver.query(
-            Reviews.CONTENT_URI, null,
-            "movie_id=?",
-            arrayOf(movieId.toString()), null
-        )
 
-        val list = ArrayList<ReviewsResult>()
-        when {
-            cursor == null -> {
-// error - log some message
-            }
-            cursor.count < 1 -> // nothing to show  - log some message
-                Log.d("message", "cursor.getCount() < 1")
-            else -> {
-                cursor.moveToFirst()
-                do {
-
-                    val id = cursor.getString(cursor.getColumnIndex("review_id"))
-                    val author = cursor.getString(cursor.getColumnIndex("author"))
-                    val content = cursor.getString(cursor.getColumnIndex("content"))
-
-                    Log.d("message", "id $id author $author content $content")
-
-                    val result = ReviewsResult(author, content, id, "")
-
-                    list.add(result)
-                } while (cursor.moveToNext())
-            }
-        }
-        cursor.close()
+        val list = repository.loadReviews(this, movieId.toString())
 
         if (list.size == 0) mRecyclerReview.visibility = View.GONE
 
@@ -500,12 +397,12 @@ class DetailsActivity : AppCompatActivity(), DetailsContract.View {
         mTitle.text = detail.title
 
         GlideApp.with(this)
-            .load(ApiUrl.POSTER_PATH + detail.backdropPath)
+            .load(ApiEndPoint.POSTER_PATH + detail.backdropPath)
             .placeholder(R.drawable.ic_movie)
             .into(mBackPoster)
 
         GlideApp.with(this)
-            .load(ApiUrl.POSTER_PATH + detail.posterPath)
+            .load(ApiEndPoint.POSTER_PATH + detail.posterPath)
             .placeholder(R.drawable.ic_movie)
             .into(mPoster)
 
