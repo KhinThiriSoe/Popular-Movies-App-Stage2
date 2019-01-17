@@ -19,7 +19,7 @@ class YouTubePlayerActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitialized
     private var key: String? = null
 
     // YouTube player view
-    private var youTubeView: YouTubePlayerView? = null
+    private lateinit var youTubeView: YouTubePlayerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +34,7 @@ class YouTubePlayerActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitialized
         youTubeView = findViewById<YouTubePlayerView>(R.id.youtube_view)
 
         // Initializing video player with developer key
-        youTubeView!!.initialize(Config.DEVELOPER_KEY, this)
+        youTubeView.initialize(Config.DEVELOPER_KEY, this)
 
         key = intent.extras.getString("key")
 

@@ -9,50 +9,60 @@ import androidx.recyclerview.widget.RecyclerView
 import com.khinthirisoe.popularmoviesappstage2.GlideApp
 import com.khinthirisoe.popularmoviesappstage2.R
 import com.khinthirisoe.popularmoviesappstage2.data.network.ApiEndPoint
+import com.khinthirisoe.popularmoviesappstage2.ui.base.BaseViewHolder
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.view.DetailsActivity
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.overview.model.MovieResult
 import kotlinx.android.synthetic.main.list_movie.view.*
 
-class MovieAdapter(private val mContext: Context, private var mListData: MutableList<MovieResult>?) :
+class MovieAdapter(private val mMovieData: MutableList<MovieResult>?) :
     RecyclerView.Adapter<MovieAdapter.MyViewHolder>() {
 
     private val Context.layoutInflater get() = LayoutInflater.from(this)
 
-    inner class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        var poster = itemView.img_poster!!
-
-    }
-
-    fun addItems(items: MutableList<MovieResult>) {
-        this.mListData?.addAll(items)
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val itemView = mContext.layoutInflater
+        val itemView = parent.context.layoutInflater
             .inflate(R.layout.list_movie, parent, false)
 
         return MyViewHolder(itemView)
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-
-        if (mListData != null) {
-            GlideApp.with(mContext)
-                .load(ApiEndPoint.POSTER_PATH + mListData!![position].posterPath)
-                .placeholder(R.drawable.ic_movie)
-                .into(holder.poster)
-
-            holder.poster.setOnClickListener {
-                mContext.startActivity(
-                    Intent(mContext, DetailsActivity::class.java)
-                        .putExtra("data", mListData!![position])
-                )
-            }
-        }
+        holder.onBind(position)
     }
 
     override fun getItemCount(): Int {
-        if (mListData == null) return 0
-        return mListData!!.size
+        return if (mMovieData != null && mMovieData.size > 0) {
+            mMovieData.size
+        } else {
+            0
+        }
+    }
+
+    fun addItems(list: ArrayList<MovieResult>) {
+        mMovieData!!.addAll(list)
+        notifyDataSetChanged()
+    }
+
+    inner class MyViewHolder(itemView: View) : BaseViewHolder(itemView) {
+
+        var poster = itemView.img_poster!!
+
+        override fun onBind(position: Int) {
+            super.onBind(position)
+
+            val list = mMovieData!![position]
+
+            GlideApp.with(itemView.context)
+                .load(ApiEndPoint.POSTER_PATH + list.posterPath)
+                .placeholder(R.drawable.ic_movie)
+                .into(poster)
+
+            poster.setOnClickListener {
+                itemView.context.startActivity(
+                    Intent(itemView.context, DetailsActivity::class.java)
+                        .putExtra("data", list)
+                )
+            }
+        }
     }
 }

@@ -113,7 +113,7 @@ class MovieActivity : AppCompatActivity(), MovieContract.View, SwipeRefreshLayou
 
     override fun showMoviesList(lists: ArrayList<MovieResult>) {
         if (pageNumber == 1) {
-            mAdapter = MovieAdapter(this, lists)
+            mAdapter = MovieAdapter(lists)
             mRecyclerView.adapter = mAdapter
             mSwipeRefreshLayout.isRefreshing = false
         } else {
@@ -149,7 +149,7 @@ class MovieActivity : AppCompatActivity(), MovieContract.View, SwipeRefreshLayou
         } else if (sortedType == "favourite") {
             supportActionBar?.title = "Favourite Movies"
             val list = repository.loadMoviesList(this)
-            mAdapter = MovieAdapter(this, list)
+            mAdapter = MovieAdapter(list)
             mRecyclerView.adapter = mAdapter
         } else {
             supportActionBar?.title = "Top Rated Movies"

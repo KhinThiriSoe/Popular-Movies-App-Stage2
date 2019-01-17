@@ -182,7 +182,7 @@ class DetailsActivity : AppCompatActivity(), DetailsContract.View {
 
         if (list.size == 0) mRecyclerVideo.visibility = View.GONE
 
-        mTrailerAdapter = TrailersAdapter(this, list)
+        mTrailerAdapter = TrailersAdapter(list)
         mRecyclerVideo.adapter = mTrailerAdapter
     }
 
@@ -211,7 +211,7 @@ class DetailsActivity : AppCompatActivity(), DetailsContract.View {
                 )
                 mRecyclerReview.visibility = View.VISIBLE
                 mRecyclerReview.startAnimation(animationDown)
-                mReviewsAdapter = ReviewsAdapter(this, list)
+                mReviewsAdapter = ReviewsAdapter(list)
                 mRecyclerReview.adapter = mReviewsAdapter
             }
         }
@@ -443,7 +443,7 @@ class DetailsActivity : AppCompatActivity(), DetailsContract.View {
                 )
                 mRecyclerReview.visibility = View.VISIBLE
                 mRecyclerReview.startAnimation(animationDown)
-                mReviewsAdapter = ReviewsAdapter(this, lists)
+                mReviewsAdapter = ReviewsAdapter(lists)
                 mRecyclerReview.adapter = mReviewsAdapter
             }
         }
@@ -460,7 +460,7 @@ class DetailsActivity : AppCompatActivity(), DetailsContract.View {
 
         if (lists.size == 0) mRecyclerVideo.visibility = View.GONE
 
-        mTrailerAdapter = TrailersAdapter(this, lists)
+        mTrailerAdapter = TrailersAdapter(lists)
         mRecyclerVideo.adapter = mTrailerAdapter
     }
 
