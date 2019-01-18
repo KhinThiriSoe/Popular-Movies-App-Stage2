@@ -94,6 +94,8 @@ class MovieActivity : AppCompatActivity(), MovieContract.View, SwipeRefreshLayou
                     }
                 }
             })
+        } else {
+            return
         }
     }
 

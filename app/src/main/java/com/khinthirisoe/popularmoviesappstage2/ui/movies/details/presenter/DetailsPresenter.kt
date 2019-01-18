@@ -2,7 +2,7 @@ package com.khinthirisoe.popularmoviesappstage2.ui.movies.details.presenter
 
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.DetailsContract
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.model.DetailsInteractor
-import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.model.Movies
+import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.model.Details
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.model.ReviewsResult
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.model.TrailersResult
 import io.reactivex.disposables.CompositeDisposable
@@ -13,14 +13,14 @@ class DetailsPresenter constructor(var interactor: DetailsInteractor) : DetailsC
     var view: DetailsContract.View? = null
     var videoList: ArrayList<TrailersResult>? = null
     var reviewsList: ArrayList<ReviewsResult>? = null
-    var movie: Movies? = null
+    var movie: Details? = null
     var compositeDisposable: CompositeDisposable = CompositeDisposable()
 
     override fun loadList(movieId: Int, key: String) {
         if (view != null) view?.showProgress()
         interactor.loadList(movieId, key, object :
             DetailsPresenter.OnListFetchListener {
-            override fun onMovieDetailListFetched(movie: Movies) {
+            override fun onMovieDetailListFetched(movie: Details) {
                 this@DetailsPresenter.movie = movie
                 if (view != null) {
                     view?.showMovieDetail(movie)
@@ -69,7 +69,7 @@ class DetailsPresenter constructor(var interactor: DetailsInteractor) : DetailsC
 
     interface OnListFetchListener {
 
-        fun onMovieDetailListFetched(movie: Movies)
+        fun onMovieDetailListFetched(movie: Details)
 
         fun onReviewsListFetched(lists: ArrayList<ReviewsResult>)
 

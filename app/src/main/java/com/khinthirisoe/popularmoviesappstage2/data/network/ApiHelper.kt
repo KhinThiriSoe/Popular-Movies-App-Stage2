@@ -15,7 +15,7 @@
 
 package com.khinthirisoe.popularmoviesappstage2.data.network
 
-import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.model.Movies
+import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.model.Details
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.model.Reviews
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.model.Trailers
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.overview.model.Genres
@@ -43,7 +43,7 @@ interface ApiHelper {
     fun getMoviesDetail(
         @Path("movie_id") movie_id: Int,
         @Query("api_key") api_key: String
-    ): Observable<Movies>
+    ): Observable<Details>
 
     @GET(ApiEndPoint.GET_VIDEO)
     fun getTailersList(

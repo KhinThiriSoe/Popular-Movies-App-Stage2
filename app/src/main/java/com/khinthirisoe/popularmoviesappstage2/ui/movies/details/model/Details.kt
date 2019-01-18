@@ -3,7 +3,7 @@ package com.khinthirisoe.popularmoviesappstage2.ui.movies.details.model
 import com.google.gson.annotations.SerializedName
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.overview.model.Genre
 
-data class Movies(
+data class Details(
     @SerializedName("adult") val adult: Boolean,
     @SerializedName("backdrop_path") val backdropPath: String,
     @SerializedName("belongs_to_collection") val belongsToCollection: BelongsToCollection,

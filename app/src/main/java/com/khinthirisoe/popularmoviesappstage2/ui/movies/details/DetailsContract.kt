@@ -1,6 +1,6 @@
 package com.khinthirisoe.popularmoviesappstage2.ui.movies.details
 
-import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.model.Movies
+import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.model.Details
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.model.ReviewsResult
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.model.TrailersResult
 
@@ -8,7 +8,7 @@ interface DetailsContract {
 
     interface View{
 
-        fun showMovieDetail(detail: Movies)
+        fun showMovieDetail(detail: Details)
 
         fun showTrailersList(lists: ArrayList<TrailersResult>)
 

@@ -46,7 +46,6 @@ class ReviewsAdapter(private val mReviewData: MutableList<ReviewsResult>?) :
 
         var content = itemView.txt_content
         var author = itemView.txt_author
-        var layout = itemView.layout
 
         override fun onBind(position: Int) {
             super.onBind(position)

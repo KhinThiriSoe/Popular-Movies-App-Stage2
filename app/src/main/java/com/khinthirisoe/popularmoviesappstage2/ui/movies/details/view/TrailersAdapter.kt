@@ -14,7 +14,7 @@ import com.khinthirisoe.popularmoviesappstage2.ui.base.BaseViewHolder
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.model.TrailersResult
 import com.khinthirisoe.popularmoviesappstage2.ui.youtube.YouTubePlayerActivity
 import com.khinthirisoe.popularmoviesappstage2.utils.Config
-import kotlinx.android.synthetic.main.list_videos.view.*
+import kotlinx.android.synthetic.main.list_trailers.view.*
 
 
 class TrailersAdapter(private val mTrailerData: ArrayList<TrailersResult>?) :
@@ -24,7 +24,7 @@ class TrailersAdapter(private val mTrailerData: ArrayList<TrailersResult>?) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val itemView = parent.context.layoutInflater
-            .inflate(R.layout.list_videos, parent, false)
+            .inflate(R.layout.list_trailers, parent, false)
 
         return MyViewHolder(itemView)
     }

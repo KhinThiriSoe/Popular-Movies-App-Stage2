@@ -22,7 +22,7 @@ class DetailsInteractor(private val mApiService: ApiHelper) {
             reviews,
             trailers,
             movies,
-            Function3<Reviews, Trailers, Movies, ZipResponse>(::ZipResponse)
+            Function3<Reviews, Trailers, Details, ZipResponse>(::ZipResponse)
         )
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())

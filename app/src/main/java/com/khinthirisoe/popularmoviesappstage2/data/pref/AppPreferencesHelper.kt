@@ -34,7 +34,7 @@ class AppPreferencesHelper constructor(context: Context) : PreferencesHelper {
         }
 
     override var sortedType: String
-        get() = mPrefs.getString(PREF_KEY_SORTED_TYPE, null)
+        get() = mPrefs.getString(PREF_KEY_SORTED_TYPE, "")
         set(value) {
             mPrefs.edit().putString(PREF_KEY_SORTED_TYPE, value).apply()
         }
