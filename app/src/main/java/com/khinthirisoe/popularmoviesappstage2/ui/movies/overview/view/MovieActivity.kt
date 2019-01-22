@@ -105,17 +105,26 @@ class MovieActivity : AppCompatActivity(), MovieFragment.OnFragmentInteractionLi
             when (which) {
                 0 -> {
                     preferenceHelper.sortedType = "popularity.desc"
-                    recreate()
+                   reload()
                 }
                 1 -> {
                     preferenceHelper.sortedType = "top_rated"
+                    reload()
                 }
                 2 -> {
                     preferenceHelper.sortedType = "favourite"
+                    reload()
                 }
             }
         }
         val dialog = builder.create()
         dialog.show()
+    }
+
+    private fun reload() {
+        finish();
+        overridePendingTransition(0, 0)
+        startActivity(intent)
+        overridePendingTransition(0, 0)
     }
 }

@@ -19,14 +19,10 @@ import com.khinthirisoe.popularmoviesappstage2.data.db.repository.DetailsReposit
 import com.khinthirisoe.popularmoviesappstage2.data.network.ApiEndPoint
 import com.khinthirisoe.popularmoviesappstage2.data.pref.AppPreferencesHelper
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.DetailsContract
-import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.event.TypeEvent
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.model.ReviewsResult
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.model.TrailersResult
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.overview.model.MovieResult
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.overview.view.MovieActivity
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 import org.koin.android.ext.android.inject
 
 

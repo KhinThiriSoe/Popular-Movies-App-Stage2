@@ -17,13 +17,9 @@ import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
 import com.khinthirisoe.popularmoviesappstage2.data.db.repository.MovieRepository
 import com.khinthirisoe.popularmoviesappstage2.data.pref.AppPreferencesHelper
-import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.event.TypeEvent
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.overview.MovieContract
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.overview.model.Genre
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.overview.model.MovieResult
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 import org.koin.android.ext.android.inject
 
 
