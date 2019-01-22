@@ -1,7 +1,6 @@
 package com.khinthirisoe.popularmoviesappstage2.ui.movies.overview.view
 
 import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,11 +9,11 @@ import com.khinthirisoe.popularmoviesappstage2.GlideApp
 import com.khinthirisoe.popularmoviesappstage2.R
 import com.khinthirisoe.popularmoviesappstage2.data.network.ApiEndPoint
 import com.khinthirisoe.popularmoviesappstage2.ui.base.BaseViewHolder
-import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.view.DetailsActivity
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.overview.model.MovieResult
 import kotlinx.android.synthetic.main.list_movie.view.*
 
-class MovieAdapter(private val mMovieData: MutableList<MovieResult>?) :
+class MovieAdapter(
+    private val mMovieData: MutableList<MovieResult>?, private val clickListener: movieListRecyclerViewClickListener) :
     RecyclerView.Adapter<MovieAdapter.MyViewHolder>() {
 
     private val Context.layoutInflater get() = LayoutInflater.from(this)
@@ -57,12 +56,20 @@ class MovieAdapter(private val mMovieData: MutableList<MovieResult>?) :
                 .placeholder(R.drawable.ic_movie)
                 .into(poster)
 
-            poster.setOnClickListener {
-                itemView.context.startActivity(
-                    Intent(itemView.context, DetailsActivity::class.java)
-                        .putExtra("data", list)
-                )
+            itemView.setOnClickListener {
+                clickListener.listItemClick(list)
             }
+
+//            poster.setOnClickListener {
+//                itemView.context.startActivity(
+//                    Intent(itemView.context, DetailsActivity::class.java)
+//                        .putExtra("data", list)
+//                )
+//            }
         }
+    }
+
+    interface movieListRecyclerViewClickListener {
+        fun listItemClick(list: MovieResult)
     }
 }

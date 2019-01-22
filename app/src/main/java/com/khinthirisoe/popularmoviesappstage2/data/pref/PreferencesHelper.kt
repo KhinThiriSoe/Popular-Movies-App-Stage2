@@ -23,4 +23,6 @@ interface PreferencesHelper {
 
     var sortedType: String
 
+    var isLargeScreen: Boolean
+
 }

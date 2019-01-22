@@ -9,13 +9,10 @@ import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.model.DetailsIn
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.presenter.DetailsPresenter
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.view.DetailsActivity
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.view.DetailsFragment
-import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.view.ReviewsAdapter
-import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.view.TrailersAdapter
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.overview.MovieContract
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.overview.model.MovieInteractor
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.overview.presenter.MoviePresenter
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.overview.view.MovieActivity
-import com.khinthirisoe.popularmoviesappstage2.ui.movies.overview.view.MovieAdapter
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.overview.view.MovieFragment
 import org.koin.dsl.module.module
 
@@ -39,10 +36,6 @@ val MovieAppModule = module {
 
     single { MovieRepository() }
     single { DetailsRepository() }
-
-    factory { MovieAdapter(get()) }
-    factory { TrailersAdapter(get()) }
-    factory { ReviewsAdapter(get()) }
 }
 
 val movieAppModules = listOf(MovieAppModule)

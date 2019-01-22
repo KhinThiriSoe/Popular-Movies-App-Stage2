@@ -39,9 +39,17 @@ class AppPreferencesHelper constructor(context: Context) : PreferencesHelper {
             mPrefs.edit().putString(PREF_KEY_SORTED_TYPE, value).apply()
         }
 
+    override var isLargeScreen: Boolean
+        get() = mPrefs.getBoolean(PREF_KEY_IS_LARGE, false)
+        set(value) {
+            mPrefs.edit().putBoolean(PREF_KEY_IS_LARGE, value).apply()
+        }
+
+
     companion object {
         private val PREF_KEY_API_KEY = "API_KEY"
         private val PREF_KEY_FIRST_OPEN = "FIRST_OPEN"
         private val PREF_KEY_SORTED_TYPE = "sortedType"
+        private val PREF_KEY_IS_LARGE = "isLargeScreen"
     }
 }

@@ -1,5 +1,6 @@
 package com.khinthirisoe.popularmoviesappstage2.ui.movies.overview.view
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,18 +9,26 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.khinthirisoe.popularmoviesappstage2.R
+import com.google.android.flexbox.AlignItems
+import com.google.android.flexbox.FlexDirection
+import com.google.android.flexbox.FlexboxLayoutManager
+import com.google.android.flexbox.JustifyContent
 import com.khinthirisoe.popularmoviesappstage2.data.db.repository.MovieRepository
 import com.khinthirisoe.popularmoviesappstage2.data.pref.AppPreferencesHelper
+import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.event.TypeEvent
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.overview.MovieContract
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.overview.model.Genre
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.overview.model.MovieResult
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.koin.android.ext.android.inject
 
-class MovieFragment : Fragment(), MovieContract.View, SwipeRefreshLayout.OnRefreshListener {
+
+class MovieFragment : Fragment(), MovieAdapter.movieListRecyclerViewClickListener,
+    MovieContract.View, SwipeRefreshLayout.OnRefreshListener {
 
     val presenter: MovieContract.Presenter by inject()
     val repository: MovieRepository by inject()
@@ -32,12 +41,22 @@ class MovieFragment : Fragment(), MovieContract.View, SwipeRefreshLayout.OnRefre
     private lateinit var mConnectionLayout: LinearLayout
     private lateinit var sortedType: String
 
-    private var isLoading = false
-    private var pageNumber = 1
-    private var visibleItemCount = 1
-    private var lastVisibleItem: Int = 0
-    private var totalItemCount: Int = 0
-    private var mGridLayoutManager: GridLayoutManager? = null
+    private var listener: OnFragmentInteractionListener? = null
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val view = inflater.inflate(com.khinthirisoe.popularmoviesappstage2.R.layout.fragment_movie, container, false)
+
+        presenter.onAttachView(this)
+
+        initView(view)
+
+        val firstLoad = preferenceHelper.firstOpen
+        if (firstLoad) {
+            loadGenreList()
+        }
+
+        return view
+    }
 
     private fun loadGenreList() {
         presenter.fetchGenres(preferenceHelper.apiKey)
@@ -45,43 +64,23 @@ class MovieFragment : Fragment(), MovieContract.View, SwipeRefreshLayout.OnRefre
     }
 
     private fun initView(view: View) {
-        mProgressBar = view.findViewById(R.id.progress_bar)
-        mRecyclerView = view.findViewById(R.id.recycler_movies)
-        mSwipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout)
-        mConnectionLayout = view.findViewById(R.id.connection_layout)
+        mProgressBar = view.findViewById(com.khinthirisoe.popularmoviesappstage2.R.id.progress_bar)
+        mRecyclerView = view.findViewById(com.khinthirisoe.popularmoviesappstage2.R.id.recycler_movies)
+        mSwipeRefreshLayout = view.findViewById(com.khinthirisoe.popularmoviesappstage2.R.id.swipeRefreshLayout)
+        mConnectionLayout = view.findViewById(com.khinthirisoe.popularmoviesappstage2.R.id.connection_layout)
 
-        mGridLayoutManager = GridLayoutManager(context, 2)
-        mRecyclerView.layoutManager = mGridLayoutManager
-        mRecyclerView.setHasFixedSize(true)
+        val layoutManager = FlexboxLayoutManager(context)
+        layoutManager.flexDirection = FlexDirection.ROW
+        layoutManager.justifyContent = JustifyContent.CENTER
+        layoutManager.alignItems = AlignItems.STRETCH
+        mRecyclerView.layoutManager = layoutManager
 
         mSwipeRefreshLayout.setOnRefreshListener(this)
 
     }
 
-    private fun setUpLoadMoreListener() {
-        if (sortedType != "favourite") {
-            mRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    super.onScrolled(recyclerView, dx, dy)
-
-                    visibleItemCount = mGridLayoutManager!!.childCount
-                    totalItemCount = mGridLayoutManager!!.itemCount
-                    lastVisibleItem = mGridLayoutManager!!.findFirstVisibleItemPosition()
-
-                    if (visibleItemCount + lastVisibleItem >= totalItemCount && !isLoading) {
-                        pageNumber++
-                        loadMoviesList()
-                        isLoading = true
-                    }
-                }
-            })
-        } else {
-            return
-        }
-    }
-
     private fun loadMoviesList() {
-        presenter.loadMoviesList(sortedType, pageNumber, preferenceHelper.apiKey)
+        presenter.loadMoviesList(sortedType, 1, preferenceHelper.apiKey)
     }
 
     override fun onRefresh() {
@@ -95,18 +94,39 @@ class MovieFragment : Fragment(), MovieContract.View, SwipeRefreshLayout.OnRefre
     }
 
     override fun showMoviesList(lists: ArrayList<MovieResult>) {
-        if (pageNumber == 1) {
-            mAdapter = MovieAdapter(lists)
-            mRecyclerView.adapter = mAdapter
-            mSwipeRefreshLayout.isRefreshing = false
+        mAdapter = MovieAdapter(lists, this)
+        mRecyclerView.adapter = mAdapter
+        mSwipeRefreshLayout.isRefreshing = false
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is OnFragmentInteractionListener) {
+            listener = context
         } else {
-            mAdapter!!.addItems(lists)
-            mRecyclerView.adapter = mAdapter
-            mAdapter!!.notifyDataSetChanged()
-            mSwipeRefreshLayout.isRefreshing = false
-            isLoading = false
-            mGridLayoutManager?.scrollToPosition(mAdapter!!.itemCount - lists.size)
+            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
         }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        listener = null
+    }
+
+    interface OnFragmentInteractionListener {
+        fun onListItemClicked(list: MovieResult)
+    }
+
+    companion object {
+        @JvmStatic
+        fun newInstance(): MovieFragment {
+            val listSelectionFragment = MovieFragment()
+            return listSelectionFragment
+        }
+    }
+
+    override fun listItemClick(list: MovieResult) {
+        listener?.onListItemClicked(list)
     }
 
     override fun showMessage(message: String) {
@@ -123,14 +143,13 @@ class MovieFragment : Fragment(), MovieContract.View, SwipeRefreshLayout.OnRefre
 
     override fun onStart() {
         super.onStart()
-        pageNumber = 1
 
         sortedType = loadPreference()
         if (sortedType == "1" || sortedType == "popularity.desc" || sortedType == "") {
             loadMoviesList()
         } else if (sortedType == "favourite") {
             val list = repository.loadMoviesList(context!!)
-            mAdapter = MovieAdapter(list)
+            mAdapter = MovieAdapter(list, this)
             mRecyclerView.adapter = mAdapter
         } else {
             loadMoviesList()
@@ -149,33 +168,5 @@ class MovieFragment : Fragment(), MovieContract.View, SwipeRefreshLayout.OnRefre
     override fun onDestroy() {
         presenter.onDetachView()
         super.onDestroy()
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_movie, container, false)
-
-        presenter.onAttachView(this)
-
-        initView(view)
-
-//        setUpLoadMoreListener()
-
-        val firstLoad = preferenceHelper.firstOpen
-        if (firstLoad) {
-            loadGenreList()
-        }
-
-        return view
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance(): MovieFragment {
-            val movieFragment = MovieFragment()
-            return movieFragment
-        }
     }
 }
