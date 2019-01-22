@@ -59,6 +59,7 @@ dependencies {
     implementation 'com.github.pwittchen:reactivenetwork-rx2:3.0.2'
 
     implementation 'com.github.bumptech.glide:glide:4.8.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0-beta01'
     kapt "com.github.bumptech.glide:compiler:4.8.0"
 
     implementation 'com.alespero:expandable-cardview:0.8'

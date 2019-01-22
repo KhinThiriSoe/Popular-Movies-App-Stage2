@@ -8,6 +8,7 @@ import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.DetailsContract
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.model.DetailsInteractor
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.presenter.DetailsPresenter
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.view.DetailsActivity
+import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.view.DetailsFragment
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.view.ReviewsAdapter
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.view.TrailersAdapter
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.overview.MovieContract
@@ -15,6 +16,7 @@ import com.khinthirisoe.popularmoviesappstage2.ui.movies.overview.model.MovieInt
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.overview.presenter.MoviePresenter
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.overview.view.MovieActivity
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.overview.view.MovieAdapter
+import com.khinthirisoe.popularmoviesappstage2.ui.movies.overview.view.MovieFragment
 import org.koin.dsl.module.module
 
 /**
@@ -23,10 +25,12 @@ import org.koin.dsl.module.module
 val MovieAppModule = module {
 
     factory { MovieActivity() }
+    factory { MovieFragment() }
     factory { MoviePresenter(get()) as MovieContract.Presenter }
     single { MovieInteractor(get()) }
 
     factory { DetailsActivity() }
+    factory { DetailsFragment() }
     factory { DetailsPresenter(get()) as DetailsContract.Presenter }
     single { DetailsInteractor(get()) }
 
