@@ -217,37 +217,8 @@ class DetailsFragment : Fragment(), DetailsContract.View {
 
         val list = repository.loadReviews(context!!, movieId.toString())
 
-        if (list.size == 0) {
-            mRecyclerReview.visibility = View.GONE
-            mEmptyReview.visibility = View.VISIBLE
-            mReviewTitle.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
-        }
+        setUpUIReview(list)
 
-        mReviewTitle.setOnClickListener {
-            if (mRecyclerReview.isShown) {
-                mReviewTitle.setCompoundDrawablesWithIntrinsicBounds(
-                    0, //left
-                    0, //top
-                    com.khinthirisoe.popularmoviesappstage2.R.drawable.ic_down_arrow, //right
-                    0
-                )
-                mRecyclerReview.startAnimation(animationUp)
-                mRecyclerReview.visibility = View.GONE
-                mEmptyReview.visibility = View.GONE
-            } else {
-                mReviewTitle.setCompoundDrawablesWithIntrinsicBounds(
-                    0, //left
-                    0, //top
-                    com.khinthirisoe.popularmoviesappstage2.R.drawable.ic_up_arrow, //right
-                    0
-                )
-                mRecyclerReview.visibility = View.VISIBLE
-                mEmptyReview.visibility = View.GONE
-                mRecyclerReview.startAnimation(animationDown)
-                mReviewsAdapter = ReviewsAdapter(list)
-                mRecyclerReview.adapter = mReviewsAdapter
-            }
-        }
     }
 
     private fun setUpListener() {
@@ -305,6 +276,10 @@ class DetailsFragment : Fragment(), DetailsContract.View {
 
     override fun showReviewsList(lists: ArrayList<ReviewsResult>) {
 
+        setUpUIReview(lists)
+    }
+
+    private fun setUpUIReview(lists: ArrayList<ReviewsResult>) {
         review = lists
 
         if (lists.size == 0) {
