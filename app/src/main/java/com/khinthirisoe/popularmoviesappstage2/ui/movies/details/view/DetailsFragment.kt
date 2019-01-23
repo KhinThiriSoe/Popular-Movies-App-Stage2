@@ -15,10 +15,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.khinthirisoe.popularmoviesappstage2.GlideApp
+import com.khinthirisoe.popularmoviesappstage2.R
 import com.khinthirisoe.popularmoviesappstage2.data.db.repository.DetailsRepository
 import com.khinthirisoe.popularmoviesappstage2.data.network.ApiEndPoint
 import com.khinthirisoe.popularmoviesappstage2.data.pref.AppPreferencesHelper
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.DetailsContract
+import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.model.Details
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.model.ReviewsResult
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.model.TrailersResult
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.overview.model.MovieResult
@@ -75,13 +77,13 @@ class DetailsFragment : Fragment(), DetailsContract.View {
     }
 
     private fun setUpToolbar(view: View) {
-        val mToolbar = view.findViewById<Toolbar>(com.khinthirisoe.popularmoviesappstage2.R.id.toolbar)
+        val mToolbar = view.findViewById<Toolbar>(R.id.toolbar)
         (activity as AppCompatActivity).setSupportActionBar(mToolbar)
 
         (activity as AppCompatActivity).supportActionBar?.setHomeButtonEnabled(true)
         (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val mAppBarLayout = view.findViewById<AppBarLayout>(com.khinthirisoe.popularmoviesappstage2.R.id.app_bar)
+        val mAppBarLayout = view.findViewById<AppBarLayout>(R.id.app_bar)
         mAppBarLayout.addOnOffsetChangedListener(object : AppBarLayout.OnOffsetChangedListener {
             var isShow = false
             var scrollRange = -1
@@ -92,40 +94,40 @@ class DetailsFragment : Fragment(), DetailsContract.View {
                 }
                 if (scrollRange + verticalOffset == 0) {
                     isShow = true
-                    showOption(com.khinthirisoe.popularmoviesappstage2.R.id.action_save)
+                    showOption(R.id.action_save)
                 } else if (isShow) {
                     isShow = false
-                    hideOption(com.khinthirisoe.popularmoviesappstage2.R.id.action_save)
+                    hideOption(R.id.action_save)
                 }
             }
         })
     }
 
     private fun initView(view: View) {
-        mRootLayout = view.findViewById(com.khinthirisoe.popularmoviesappstage2.R.id.root_layout)
-        mTitle = view.findViewById(com.khinthirisoe.popularmoviesappstage2.R.id.txt_title)
-        mBackPoster = view.findViewById(com.khinthirisoe.popularmoviesappstage2.R.id.img_backposter)
-        mPoster = view.findViewById(com.khinthirisoe.popularmoviesappstage2.R.id.img_poster)
-        mOverviewTitle = view.findViewById(com.khinthirisoe.popularmoviesappstage2.R.id.txt_title_overview)
-        mOverview = view.findViewById(com.khinthirisoe.popularmoviesappstage2.R.id.txt_overview)
-        mAverageVote = view.findViewById(com.khinthirisoe.popularmoviesappstage2.R.id.txt_average_vote)
-        mGenre = view.findViewById(com.khinthirisoe.popularmoviesappstage2.R.id.txt_genre)
-        mReleaseDate = view.findViewById(com.khinthirisoe.popularmoviesappstage2.R.id.txt_release_date)
-        mReviewTitle = view.findViewById(com.khinthirisoe.popularmoviesappstage2.R.id.txt_title_reviews)
-        mRecyclerReview = view.findViewById(com.khinthirisoe.popularmoviesappstage2.R.id.recycler_reviews)
-        mRecyclerVideo = view.findViewById(com.khinthirisoe.popularmoviesappstage2.R.id.recycler_trailers)
-        mProgressBar = view.findViewById(com.khinthirisoe.popularmoviesappstage2.R.id.progress_bar)
-        mFab = view.findViewById(com.khinthirisoe.popularmoviesappstage2.R.id.fab)
-        mEmptyReview = view.findViewById(com.khinthirisoe.popularmoviesappstage2.R.id.no_reviews)
-        mEmptyTrailer = view.findViewById(com.khinthirisoe.popularmoviesappstage2.R.id.no_trailers)
+        mRootLayout = view.findViewById(R.id.root_layout)
+        mTitle = view.findViewById(R.id.txt_title)
+        mBackPoster = view.findViewById(R.id.img_backposter)
+        mPoster = view.findViewById(R.id.img_poster)
+        mOverviewTitle = view.findViewById(R.id.txt_title_overview)
+        mOverview = view.findViewById(R.id.txt_overview)
+        mAverageVote = view.findViewById(R.id.txt_average_vote)
+        mGenre = view.findViewById(R.id.txt_genre)
+        mReleaseDate = view.findViewById(R.id.txt_release_date)
+        mReviewTitle = view.findViewById(R.id.txt_title_reviews)
+        mRecyclerReview = view.findViewById(R.id.recycler_reviews)
+        mRecyclerVideo = view.findViewById(R.id.recycler_trailers)
+        mProgressBar = view.findViewById(R.id.progress_bar)
+        mFab = view.findViewById(R.id.fab)
+        mEmptyReview = view.findViewById(R.id.no_reviews)
+        mEmptyTrailer = view.findViewById(R.id.no_trailers)
 
         mRecyclerReview.layoutManager = LinearLayoutManager(context!!)
         val layoutManager = LinearLayoutManager(context!!, LinearLayoutManager.HORIZONTAL, false)
         mRecyclerVideo.layoutManager = layoutManager
 
-        animationUp = AnimationUtils.loadAnimation(context!!, com.khinthirisoe.popularmoviesappstage2.R.anim.slide_up)
+        animationUp = AnimationUtils.loadAnimation(context!!, R.anim.slide_up)
         animationDown =
-                AnimationUtils.loadAnimation(context!!, com.khinthirisoe.popularmoviesappstage2.R.anim.slide_down)
+                AnimationUtils.loadAnimation(context!!, R.anim.slide_down)
     }
 
     private fun checkIntent() {
@@ -143,10 +145,10 @@ class DetailsFragment : Fragment(), DetailsContract.View {
 
     private fun setUpUI(detail: MovieResult) {
         mFab.visibility = View.VISIBLE
-        mFab.setImageResource(com.khinthirisoe.popularmoviesappstage2.R.drawable.ic_favorite)
+        mFab.setImageResource(R.drawable.ic_favorite)
 
         mFab.setOnClickListener {
-            mFab.setImageResource(com.khinthirisoe.popularmoviesappstage2.R.drawable.ic_favorite_border)
+            mFab.setImageResource(R.drawable.ic_favorite_border)
 
             repository.removeMovieDetail(context!!, movieId.toString())
             repository.removeReview(context!!, movieId.toString())
@@ -159,21 +161,21 @@ class DetailsFragment : Fragment(), DetailsContract.View {
 
         if (detail.backdropPath.isEmpty()) {
             GlideApp.with(this)
-                .load(com.khinthirisoe.popularmoviesappstage2.R.drawable.ic_movie)
-                .placeholder(com.khinthirisoe.popularmoviesappstage2.R.drawable.ic_movie)
+                .load(R.drawable.ic_movie)
+                .placeholder(R.drawable.ic_movie)
                 .into(mBackPoster)
 
         } else {
             GlideApp.with(this)
                 .load(ApiEndPoint.POSTER_PATH + detail.backdropPath)
-                .placeholder(com.khinthirisoe.popularmoviesappstage2.R.drawable.ic_movie)
+                .placeholder(R.drawable.ic_movie)
                 .into(mBackPoster)
         }
 
 
         GlideApp.with(this)
             .load(ApiEndPoint.POSTER_PATH + detail.posterPath)
-            .placeholder(com.khinthirisoe.popularmoviesappstage2.R.drawable.ic_movie)
+            .placeholder(R.drawable.ic_movie)
             .into(mPoster)
 
         mAverageVote.text = detail.voteAverage.toString()
@@ -225,7 +227,7 @@ class DetailsFragment : Fragment(), DetailsContract.View {
         mFab.setOnClickListener {
 
             showingFirst = if (showingFirst) {
-                mFab.setImageResource(com.khinthirisoe.popularmoviesappstage2.R.drawable.ic_favorite)
+                mFab.setImageResource(R.drawable.ic_favorite)
 
                 repository.saveMovieDetail(context!!, detail!!, movieId.toString())
                 repository.saveReview(context!!, review, movieId.toString())
@@ -233,7 +235,7 @@ class DetailsFragment : Fragment(), DetailsContract.View {
 
                 false
             } else {
-                mFab.setImageResource(com.khinthirisoe.popularmoviesappstage2.R.drawable.ic_favorite_border)
+                mFab.setImageResource(R.drawable.ic_favorite_border)
                 repository.removeMovieDetail(context!!, movieId.toString())
                 repository.removeReview(context!!, movieId.toString())
                 repository.removeTrailer(context!!, movieId.toString())
@@ -243,7 +245,7 @@ class DetailsFragment : Fragment(), DetailsContract.View {
     }
 
     @SuppressLint("RestrictedApi")
-    override fun showMovieDetail(detail: com.khinthirisoe.popularmoviesappstage2.ui.movies.details.model.Details) {
+    override fun showMovieDetail(detail: Details) {
         this.detail = detail
 
         mFab.visibility = View.VISIBLE
@@ -254,12 +256,12 @@ class DetailsFragment : Fragment(), DetailsContract.View {
 
         GlideApp.with(this)
             .load(ApiEndPoint.POSTER_PATH + detail.backdropPath)
-            .placeholder(com.khinthirisoe.popularmoviesappstage2.R.drawable.ic_movie)
+            .placeholder(R.drawable.ic_movie)
             .into(mBackPoster)
 
         GlideApp.with(this)
             .load(ApiEndPoint.POSTER_PATH + detail.posterPath)
-            .placeholder(com.khinthirisoe.popularmoviesappstage2.R.drawable.ic_movie)
+            .placeholder(R.drawable.ic_movie)
             .into(mPoster)
 
         mAverageVote.text = detail.voteAverage.toString()
@@ -293,7 +295,7 @@ class DetailsFragment : Fragment(), DetailsContract.View {
                 mReviewTitle.setCompoundDrawablesWithIntrinsicBounds(
                     0, //left
                     0, //top
-                    com.khinthirisoe.popularmoviesappstage2.R.drawable.ic_down_arrow, //right
+                    R.drawable.ic_down_arrow, //right
                     0
                 )
                 mRecyclerReview.startAnimation(animationUp)
@@ -303,7 +305,7 @@ class DetailsFragment : Fragment(), DetailsContract.View {
                 mReviewTitle.setCompoundDrawablesWithIntrinsicBounds(
                     0, //left
                     0, //top
-                    com.khinthirisoe.popularmoviesappstage2.R.drawable.ic_up_arrow, //right
+                    R.drawable.ic_up_arrow, //right
                     0
                 )
                 mRecyclerReview.visibility = View.VISIBLE
@@ -341,7 +343,7 @@ class DetailsFragment : Fragment(), DetailsContract.View {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(com.khinthirisoe.popularmoviesappstage2.R.layout.fragment_details, container, false)
+        val view = inflater.inflate(R.layout.fragment_details, container, false)
 
         initView(view)
 
@@ -371,14 +373,14 @@ class DetailsFragment : Fragment(), DetailsContract.View {
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         super.onCreateOptionsMenu(menu, inflater)
         this.menu = menu
-        inflater?.inflate(com.khinthirisoe.popularmoviesappstage2.R.menu.menu_detail, menu)
-        hideOption(com.khinthirisoe.popularmoviesappstage2.R.id.action_save)
+        inflater?.inflate(R.menu.menu_detail, menu)
+        hideOption(R.id.action_save)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
 
-        if (id == com.khinthirisoe.popularmoviesappstage2.R.id.action_save) {
+        if (id == R.id.action_save) {
             val menu = menu?.getItem(0)
             return true
         }

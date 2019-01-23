@@ -8,17 +8,13 @@ import android.widget.FrameLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.khinthirisoe.popularmoviesappstage2.R
-import com.khinthirisoe.popularmoviesappstage2.data.pref.AppPreferencesHelper
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.view.DetailsActivity
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.details.view.DetailsFragment
 import com.khinthirisoe.popularmoviesappstage2.ui.movies.overview.model.MovieResult
 import com.khinthirisoe.popularmoviesappstage2.ui.settings.SettingsActivity
-import org.koin.android.ext.android.inject
 
 
 class MovieActivity : AppCompatActivity(), MovieFragment.OnFragmentInteractionListener {
-
-    val preferenceHelper: AppPreferencesHelper by inject()
 
     private var movieFragment: MovieFragment = MovieFragment()
     private var fragmentContainer: FrameLayout? = null
@@ -31,18 +27,18 @@ class MovieActivity : AppCompatActivity(), MovieFragment.OnFragmentInteractionLi
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(com.khinthirisoe.popularmoviesappstage2.R.layout.activity_main)
+        setContentView(R.layout.activity_main)
 
         movieFragment =
-                supportFragmentManager.findFragmentById(com.khinthirisoe.popularmoviesappstage2.R.id.list_selection_fragment) as MovieFragment
-        fragmentContainer = findViewById(com.khinthirisoe.popularmoviesappstage2.R.id.fragment_container)
-        preferenceHelper.isLargeScreen = fragmentContainer != null
+                supportFragmentManager.findFragmentById(R.id.list_selection_fragment) as MovieFragment
+        fragmentContainer = findViewById(R.id.fragment_container)
+        movieFragment.preferenceHelper.isLargeScreen = fragmentContainer != null
     }
 
     override fun onStart() {
         super.onStart()
 
-        val sortedType = preferenceHelper.sortedType
+        val sortedType = movieFragment.preferenceHelper.sortedType
         if (sortedType == "1" || sortedType == "popularity.desc" || sortedType == "") {
             supportActionBar?.title = "Popular Movies"
         } else if (sortedType == "favourite") {
@@ -58,7 +54,7 @@ class MovieActivity : AppCompatActivity(), MovieFragment.OnFragmentInteractionLi
     }
 
     private fun showListDetail(list: MovieResult) {
-        if (!preferenceHelper.isLargeScreen) {
+        if (!movieFragment.preferenceHelper.isLargeScreen) {
             val listDetailIntent = Intent(this, DetailsActivity::class.java)
             listDetailIntent.putExtra(INTENT_LIST_KEY, list)
             startActivityForResult(listDetailIntent, LIST_DETAIL_REQUEST_CODE)
@@ -66,7 +62,7 @@ class MovieActivity : AppCompatActivity(), MovieFragment.OnFragmentInteractionLi
             listDetailFragment = DetailsFragment.newInstance(list)
             supportFragmentManager.beginTransaction()
                 .replace(
-                    com.khinthirisoe.popularmoviesappstage2.R.id.fragment_container,
+                    R.id.fragment_container,
                     listDetailFragment!!,
                     "Detail Fragment"
                 )
@@ -77,15 +73,15 @@ class MovieActivity : AppCompatActivity(), MovieFragment.OnFragmentInteractionLi
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(com.khinthirisoe.popularmoviesappstage2.R.menu.menu_setting, menu)
+        menuInflater.inflate(R.menu.menu_setting, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
 
         val id = item!!.itemId
-        if (id == com.khinthirisoe.popularmoviesappstage2.R.id.action_settings) {
-            if (preferenceHelper.isLargeScreen) {
+        if (id == R.id.action_settings) {
+            if (movieFragment.preferenceHelper.isLargeScreen) {
                 settingsAlertDialog()
             } else {
                 startActivity(Intent(this, SettingsActivity::class.java))
@@ -104,15 +100,15 @@ class MovieActivity : AppCompatActivity(), MovieFragment.OnFragmentInteractionLi
         builder.setItems(type) { dialog, which ->
             when (which) {
                 0 -> {
-                    preferenceHelper.sortedType = "popularity.desc"
-                   reload()
+                    movieFragment.preferenceHelper.sortedType = "popularity.desc"
+                    reload()
                 }
                 1 -> {
-                    preferenceHelper.sortedType = "top_rated"
+                    movieFragment.preferenceHelper.sortedType = "top_rated"
                     reload()
                 }
                 2 -> {
-                    preferenceHelper.sortedType = "favourite"
+                    movieFragment.preferenceHelper.sortedType = "favourite"
                     reload()
                 }
             }
@@ -122,7 +118,7 @@ class MovieActivity : AppCompatActivity(), MovieFragment.OnFragmentInteractionLi
     }
 
     private fun reload() {
-        finish();
+        finish()
         overridePendingTransition(0, 0)
         startActivity(intent)
         overridePendingTransition(0, 0)

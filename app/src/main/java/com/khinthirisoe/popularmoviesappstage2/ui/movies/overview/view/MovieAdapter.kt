@@ -13,7 +13,8 @@ import com.khinthirisoe.popularmoviesappstage2.ui.movies.overview.model.MovieRes
 import kotlinx.android.synthetic.main.list_movie.view.*
 
 class MovieAdapter(
-    private val mMovieData: MutableList<MovieResult>?, private val clickListener: movieListRecyclerViewClickListener) :
+    private val mMovieData: MutableList<MovieResult>?, private val clickListener: MovieListRecyclerViewClickListener
+) :
     RecyclerView.Adapter<MovieAdapter.MyViewHolder>() {
 
     private val Context.layoutInflater get() = LayoutInflater.from(this)
@@ -59,17 +60,11 @@ class MovieAdapter(
             itemView.setOnClickListener {
                 clickListener.listItemClick(list)
             }
-
-//            poster.setOnClickListener {
-//                itemView.context.startActivity(
-//                    Intent(itemView.context, DetailsActivity::class.java)
-//                        .putExtra("data", list)
-//                )
-//            }
         }
+
     }
 
-    interface movieListRecyclerViewClickListener {
+    interface MovieListRecyclerViewClickListener {
         fun listItemClick(list: MovieResult)
     }
 }

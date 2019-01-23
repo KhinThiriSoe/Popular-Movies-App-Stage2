@@ -23,7 +23,7 @@ import com.khinthirisoe.popularmoviesappstage2.ui.movies.overview.model.MovieRes
 import org.koin.android.ext.android.inject
 
 
-class MovieFragment : Fragment(), MovieAdapter.movieListRecyclerViewClickListener,
+class MovieFragment : Fragment(), MovieAdapter.MovieListRecyclerViewClickListener,
     MovieContract.View, SwipeRefreshLayout.OnRefreshListener {
 
     val presenter: MovieContract.Presenter by inject()
